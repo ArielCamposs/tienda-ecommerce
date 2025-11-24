@@ -1,0 +1,168 @@
+---
+interface Props {
+    productId: number;
+    productName: string;
+    productPrice: number;
+    productImage: string;
+    size?: "sm" | "md" | "lg";
+}
+
+const {
+    productId,
+    productName,
+    productPrice,
+    productImage,
+    size = "md",
+} = Astro.props;
+
+const sizeClasses = {
+    sm: "w-5 h-5",
+    md: "w-6 h-6",
+    lg: "w-7 h-7",
+};
+
+const iconSize = sizeClasses[size];
+---
+
+<button
+    class="wishlist-btn"
+    data-product-id={productId}
+    data-product-name={productName}
+    data-product-price={productPrice}
+    data-product-image={productImage}
+    title="Agregar a favoritos"
+>
+    <svg
+        class={`heart-icon ${iconSize}`}
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+    >
+        <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+        ></path>
+    </svg>
+</button>
+
+<script>
+    import { toggleWishlist, isInWishlist } from "../scripts/wishlist";
+
+    // Inicializar estado de todos los botones
+    function initWishlistButtons() {
+        document.querySelectorAll(".wishlist-btn").forEach((button) => {
+            const btn = button as HTMLButtonElement;
+            const productId = parseInt(btn.dataset.productId!);
+
+            // Establecer estado inicial
+            updateButtonState(btn, isInWishlist(productId));
+
+            // Agregar event listener
+            btn.addEventListener("click", handleWishlistClick);
+        });
+    }
+
+    // Manejar click en botón
+    function handleWishlistClick(e: Event) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const btn = e.currentTarget as HTMLButtonElement;
+        const product = {
+            id: parseInt(btn.dataset.productId!),
+            name: btn.dataset.productName!,
+            price: parseFloat(btn.dataset.productPrice!),
+            image: btn.dataset.productImage!,
+        };
+
+        const isNowInWishlist = toggleWishlist(product);
+        updateButtonState(btn, isNowInWishlist);
+
+        // Animación
+        btn.classList.add("animate-bounce");
+        setTimeout(() => btn.classList.remove("animate-bounce"), 500);
+    }
+
+    // Actualizar estado visual del botón
+    function updateButtonState(btn: HTMLButtonElement, isInWishlist: boolean) {
+        const icon = btn.querySelector(".heart-icon");
+
+        if (isInWishlist) {
+            btn.classList.add("active");
+            icon?.setAttribute("fill", "currentColor");
+            btn.title = "Quitar de favoritos";
+        } else {
+            btn.classList.remove("active");
+            icon?.setAttribute("fill", "none");
+            btn.title = "Agregar a favoritos";
+        }
+    }
+
+    // Actualizar cuando cambie la wishlist
+    window.addEventListener("wishlistUpdated", () => {
+        initWishlistButtons();
+    });
+
+    // Inicializar al cargar
+    initWishlistButtons();
+
+    // Reinicializar en navegación de Astro
+    document.addEventListener("astro:page-load", initWishlistButtons);
+</script>
+
+<style>
+    .wishlist-btn {
+        background: white;
+        border: none;
+        border-radius: 50%;
+        padding: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .wishlist-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .heart-icon {
+        color: #ef4444;
+        transition: all 0.2s;
+    }
+
+    .wishlist-btn.active .heart-icon {
+        fill: currentColor;
+        animation: heartbeat 0.3s ease-in-out;
+    }
+
+    @keyframes heartbeat {
+        0%,
+        100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.2);
+        }
+    }
+
+    .animate-bounce {
+        animation: bounce 0.5s ease-in-out;
+    }
+
+    @keyframes bounce {
+        0%,
+        100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.15);
+        }
+    }
+</style>

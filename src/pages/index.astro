@@ -1,0 +1,1047 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import ProductCard from "../components/ProductCard.astro";
+import Footer from "../components/Footer.astro";
+import { getAverageRating, getReviewCount } from "../data/reviews";
+
+const featuredProducts = [
+    {
+        id: 1,
+        name: "Contenedor Industrial 50L",
+        price: 15990,
+        image: "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=600",
+        category: "industrial",
+    },
+    {
+        id: 2,
+        name: "Set Limpieza Profesional",
+        price: 8990,
+        image: "https://images.unsplash.com/photo-1563453392212-326f5e854473?w=600",
+        category: "limpieza",
+    },
+    {
+        id: 3,
+        name: "Caja Organizadora 30L",
+        price: 12990,
+        image: "https://images.unsplash.com/photo-1600857544200-b906d1bb0e8d?w=600",
+        category: "organizacion",
+    },
+    {
+        id: 4,
+        name: "Kit Desinfección Completo",
+        price: 24990,
+        image: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600",
+        category: "higiene",
+    },
+].map((product) => ({
+    ...product,
+    rating: getAverageRating(product.id),
+    reviewCount: getReviewCount(product.id),
+}));
+
+const saleProducts = [
+    {
+        id: 1,
+        name: "Contenedor Industrial 50L",
+        price: 15990,
+        originalPrice: 19990,
+        discount: 20,
+        image: "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=600",
+        category: "industrial",
+    },
+    {
+        id: 3,
+        name: "Caja Organizadora 30L",
+        price: 12990,
+        originalPrice: 16990,
+        discount: 24,
+        image: "https://images.unsplash.com/photo-1600857544200-b906d1bb0e8d?w=600",
+        category: "organizacion",
+    },
+    {
+        id: 5,
+        name: "Balde Industrial 20L",
+        price: 7990,
+        originalPrice: 9990,
+        discount: 20,
+        image: "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=600",
+        category: "industrial",
+    },
+    {
+        id: 7,
+        name: "Dispensador Jabón Automático",
+        price: 14990,
+        originalPrice: 18990,
+        discount: 21,
+        image: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600",
+        category: "bano",
+    },
+];
+
+const categories = [
+    {
+        id: "industrial",
+        name: "Industrial",
+        description: "Contenedores y soluciones industriales",
+        image: "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=600",
+        icon: "🏭",
+    },
+    {
+        id: "limpieza",
+        name: "Limpieza",
+        description: "Productos para una limpieza eficiente",
+        image: "https://images.unsplash.com/photo-1563453392212-326f5e854473?w=600",
+        icon: "🧹",
+    },
+    {
+        id: "organizacion",
+        name: "Organización",
+        description: "Cajas y cestas organizadoras",
+        image: "https://images.unsplash.com/photo-1600857544200-b906d1bb0e8d?w=600",
+        icon: "📦",
+    },
+    {
+        id: "higiene",
+        name: "Higiene",
+        description: "Kits de desinfección y sanitización",
+        image: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600",
+        icon: "🧼",
+    },
+];
+---
+
+<Layout title="PlastiClean - Plásticos y Artículos de Aseo">
+    <Header />
+
+    <!-- Promo Banner (Justo debajo del header) -->
+    <section class="promo-banner">
+        <div class="promo-content">
+            <div class="promo-left">
+                <div class="promo-badge">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="badge-icon"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                        ></path>
+                    </svg>
+                    ¡Ofertas Especiales!
+                </div>
+                <h1 class="promo-title">
+                    Hasta <span class="highlight">25% OFF</span>
+                </h1>
+                <p class="promo-description">
+                    En productos seleccionados. Aprovecha descuentos increíbles
+                    en plásticos industriales y artículos de limpieza.
+                </p>
+                <div class="promo-features">
+                    <div class="feature-item">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="feature-icon"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Stock limitado
+                    </div>
+                    <div class="feature-item">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="feature-icon"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Envío gratis en compras sobre $30.000
+                    </div>
+                </div>
+                <a href="/ofertas" class="promo-cta">
+                    Ver todas las ofertas
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="cta-icon"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="promo-right">
+                <div class="discount-circle">
+                    <div class="circle-content">
+                        <span class="discount-value">25%</span>
+                        <span class="discount-label">OFF</span>
+                    </div>
+                </div>
+                <div class="floating-cards">
+                    {
+                        saleProducts.slice(0, 3).map((product, index) => (
+                            <div
+                                class="floating-card"
+                                style={`animation-delay: ${index * 0.2}s`}
+                            >
+                                <img src={product.image} alt={product.name} />
+                                <div class="card-discount">
+                                    -{product.discount}%
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hero Component -->
+    <Hero
+        title="Calidad que cuida tu espacio"
+        subtitle="Soluciones en plásticos y artículos de aseo para hogar e industria"
+    />
+
+    <!-- Sale Products Section -->
+    <section class="sale-section">
+        <div class="max-w-7xl mx-auto px-6 py-12">
+            <div class="section-header">
+                <h2 class="section-title">Productos en Oferta</h2>
+                <a href="/ofertas" class="view-all-link">
+                    Ver todo
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="link-icon"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="products-grid">
+                {
+                    saleProducts.map((product) => (
+                        <article class="product-card-sale">
+                            <div class="discount-badge">
+                                -{product.discount}%
+                            </div>
+                            <a
+                                href={`/producto/${product.id}`}
+                                class="product-link"
+                            >
+                                <div class="product-image">
+                                    <img
+                                        src={product.image}
+                                        alt={product.name}
+                                    />
+                                </div>
+                                <div class="product-info">
+                                    <h3 class="product-name">{product.name}</h3>
+                                    <div class="price-container">
+                                        <span class="original-price">
+                                            $
+                                            {product.originalPrice.toLocaleString(
+                                                "es-CL",
+                                            )}
+                                        </span>
+                                        <span class="sale-price">
+                                            $
+                                            {product.price.toLocaleString(
+                                                "es-CL",
+                                            )}
+                                        </span>
+                                    </div>
+                                    <div class="savings">
+                                        Ahorras $
+                                        {(
+                                            product.originalPrice -
+                                            product.price
+                                        ).toLocaleString("es-CL")}
+                                    </div>
+                                </div>
+                            </a>
+                            <button
+                                class="quick-add-btn"
+                                data-product-id={product.id}
+                                data-product-name={product.name}
+                                data-product-price={product.price}
+                                data-product-image={product.image}
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="btn-icon"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                                    />
+                                </svg>
+                                Agregar
+                            </button>
+                        </article>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories-section">
+        <div class="max-w-7xl mx-auto px-6 py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4">Explora por Categoría</h2>
+                <p class="text-gray-600 text-lg">
+                    Encuentra exactamente lo que necesitas
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {
+                    categories.map((category) => (
+                        <a
+                            href={`/productos?categoria=${category.id}`}
+                            class="category-card"
+                        >
+                            <div class="category-image">
+                                <img src={category.image} alt={category.name} />
+                                <div class="category-overlay">
+                                    <span class="category-icon">
+                                        {category.icon}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="category-content">
+                                <h3 class="category-name">{category.name}</h3>
+                                <p class="category-description">
+                                    {category.description}
+                                </p>
+                            </div>
+                        </a>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section class="py-16 px-6 bg-gray-50">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-12">
+                Productos Destacados
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {
+                    featuredProducts.map((product) => (
+                        <ProductCard {...product} />
+                    ))
+                }
+            </div>
+            <div class="text-center mt-12">
+                <a
+                    href="/productos"
+                    class="inline-flex items-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-all"
+                >
+                    Ver todos los productos
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 px-6 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="text-center">
+                    <div
+                        class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-8 w-8 text-blue-600"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Calidad Garantizada</h3>
+                    <p class="text-gray-600">
+                        Productos de alta durabilidad y resistencia
+                    </p>
+                </div>
+                <div class="text-center">
+                    <div
+                        class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-8 w-8 text-blue-600"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            ></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Mejores Precios</h3>
+                    <p class="text-gray-600">Ofertas y descuentos constantes</p>
+                </div>
+                <div class="text-center">
+                    <div
+                        class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-8 w-8 text-blue-600"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                            ></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Envío Rápido</h3>
+                    <p class="text-gray-600">Entrega en 24-48 horas</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <Footer />
+</Layout>
+
+<script>
+    import { addToCart } from "../scripts/cart.js";
+
+    document.querySelectorAll(".quick-add-btn").forEach((button) => {
+        button.addEventListener("click", (e) => {
+            e.preventDefault();
+            const btn = e.currentTarget as HTMLElement;
+
+            const product = {
+                id: parseInt(btn.dataset.productId!),
+                name: btn.dataset.productName!,
+                price: parseFloat(btn.dataset.productPrice!),
+                image: btn.dataset.productImage!,
+                quantity: 1,
+            };
+
+            addToCart(product);
+
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" class="btn-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        ¡Agregado!
+      `;
+            btn.style.background = "#10b981";
+
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.style.background = "";
+            }, 1500);
+        });
+    });
+</script>
+
+<style>
+    /* Promo Banner */
+    .promo-banner {
+        margin-top: 56px;
+        background: linear-gradient(135deg, #dc2626 0%, #f97316 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .promo-banner::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.15) 0%,
+            transparent 70%
+        );
+        border-radius: 50%;
+    }
+
+    .promo-banner::after {
+        content: "";
+        position: absolute;
+        bottom: -30%;
+        left: -5%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.1) 0%,
+            transparent 70%
+        );
+        border-radius: 50%;
+    }
+
+    .promo-content {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 3rem 1.5rem;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    @media (min-width: 1024px) {
+        .promo-content {
+            grid-template-columns: 1fr 1fr;
+            padding: 4rem 1.5rem;
+        }
+    }
+
+    .promo-left {
+        color: white;
+    }
+
+    .promo-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(8px);
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .badge-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .promo-title {
+        font-size: 3rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+    }
+
+    .highlight {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0 1rem;
+        border-radius: 0.5rem;
+        color: #fff;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%,
+        100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    .promo-description {
+        font-size: 1.125rem;
+        line-height: 1.7;
+        margin-bottom: 2rem;
+        opacity: 0.95;
+    }
+
+    .promo-features {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9375rem;
+    }
+
+    .feature-icon {
+        width: 20px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        padding: 0.25rem;
+    }
+
+    .promo-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: white;
+        color: #dc2626;
+        padding: 1rem 2rem;
+        border-radius: 0.75rem;
+        font-weight: 700;
+        font-size: 1.125rem;
+        text-decoration: none;
+        transition: all 0.3s;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .promo-cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .cta-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .promo-right {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 300px;
+    }
+
+    .discount-circle {
+        width: 220px;
+        height: 220px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        position: relative;
+        z-index: 2;
+    }
+
+    .circle-content {
+        text-align: center;
+    }
+
+    .discount-value {
+        display: block;
+        font-size: 4rem;
+        font-weight: 900;
+        color: #dc2626;
+        line-height: 1;
+    }
+
+    .discount-label {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #374151;
+    }
+
+    .floating-cards {
+        position: absolute;
+        inset: 0;
+    }
+
+    .floating-card {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        animation: float 3s ease-in-out infinite;
+        background: white;
+    }
+
+    .floating-card:nth-child(1) {
+        top: 10%;
+        left: 0%;
+    }
+
+    .floating-card:nth-child(2) {
+        top: 50%;
+        right: 5%;
+        animation-delay: 0.5s;
+    }
+
+    .floating-card:nth-child(3) {
+        bottom: 15%;
+        left: 10%;
+        animation-delay: 1s;
+    }
+
+    .floating-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .card-discount {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: #dc2626;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.375rem;
+        font-weight: 700;
+        font-size: 0.75rem;
+    }
+
+    @keyframes float {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-15px);
+        }
+    }
+
+    /* Sale Section */
+    .sale-section {
+        background: white;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .view-all-link {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #dc2626;
+        font-weight: 600;
+        text-decoration: none;
+        transition: gap 0.2s;
+    }
+
+    .view-all-link:hover {
+        gap: 0.75rem;
+    }
+
+    .link-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+    }
+
+    /* Sale Product Cards */
+    .product-card-sale {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        background: white;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid transparent;
+    }
+
+    .product-card-sale:hover {
+        box-shadow: 0 20px 40px rgba(220, 38, 38, 0.2);
+        transform: translateY(-8px);
+        border-color: #ef4444;
+    }
+
+    .discount-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: linear-gradient(135deg, #dc2626, #ef4444);
+        color: white;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        font-weight: 700;
+        font-size: 0.875rem;
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+        z-index: 10;
+    }
+
+    .product-link {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .product-image {
+        aspect-ratio: 1;
+        overflow: hidden;
+        background: #f3f4f6;
+    }
+
+    .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s;
+    }
+
+    .product-card-sale:hover .product-image img {
+        transform: scale(1.1);
+    }
+
+    .product-info {
+        padding: 1.25rem;
+    }
+
+    .product-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+        min-height: 2.8em;
+    }
+
+    .price-container {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .original-price {
+        font-size: 0.875rem;
+        color: #9ca3af;
+        text-decoration: line-through;
+    }
+
+    .sale-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #dc2626;
+    }
+
+    .savings {
+        font-size: 0.8125rem;
+        color: #059669;
+        font-weight: 600;
+        background: #d1fae5;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        display: inline-block;
+    }
+
+    .quick-add-btn {
+        margin: 0 1rem 1rem;
+        padding: 0.875rem;
+        background: #dc2626;
+        color: white;
+        border: none;
+        border-radius: 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .quick-add-btn:hover {
+        background: #b91c1c;
+        transform: translateY(-2px);
+    }
+
+    .btn-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    /* Categories Section */
+    .categories-section {
+        background: linear-gradient(to bottom, white, #f9fafb);
+    }
+
+    .category-card {
+        position: relative;
+        border-radius: 1rem;
+        overflow: hidden;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: block;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    }
+
+    .category-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .category-image {
+        position: relative;
+        aspect-ratio: 4/3;
+        overflow: hidden;
+    }
+
+    .category-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s;
+    }
+
+    .category-card:hover .category-image img {
+        transform: scale(1.1);
+    }
+
+    .category-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 1.5rem;
+    }
+
+    .category-icon {
+        font-size: 3rem;
+    }
+
+    .category-content {
+        padding: 1.5rem;
+        background: white;
+    }
+
+    .category-name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 0.5rem;
+    }
+
+    .category-description {
+        font-size: 0.875rem;
+        color: #6b7280;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .promo-title {
+            font-size: 2rem;
+        }
+
+        .promo-description {
+            font-size: 1rem;
+        }
+
+        .discount-circle {
+            width: 180px;
+            height: 180px;
+        }
+
+        .discount-value {
+            font-size: 3rem;
+        }
+
+        .discount-label {
+            font-size: 1.25rem;
+        }
+
+        .floating-card {
+            width: 80px;
+            height: 80px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+
+        .products-grid {
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1rem;
+        }
+    }
+</style>

@@ -1,0 +1,425 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import ProductCard from "../components/ProductCard.astro";
+import { getAverageRating, getReviewCount } from "../data/reviews";
+
+// Nota: Los favoritos se cargarán dinámicamente con JavaScript
+// porque están en localStorage del cliente
+---
+
+<Layout title="Mis Favoritos - PlastiClean">
+    <Header />
+
+    <div class="favorites-page">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Mis Favoritos</h1>
+                <p class="page-subtitle">Productos que te gustan</p>
+            </div>
+
+            <!-- Loading state -->
+            <div id="loading-state" class="loading">
+                <div class="spinner"></div>
+                <p>Cargando favoritos...</p>
+            </div>
+
+            <!-- Empty state -->
+            <div id="empty-state" class="empty-state" style="display: none;">
+                <svg
+                    class="empty-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    ></path>
+                </svg>
+                <h2 class="empty-title">No tienes favoritos aún</h2>
+                <p class="empty-text">
+                    Explora nuestros productos y guarda tus favoritos aquí
+                </p>
+                <a href="/productos" class="browse-btn">Ver Productos</a>
+            </div>
+
+            <!-- Products grid -->
+            <div id="products-section" style="display: none;">
+                <div class="favorites-count" id="favorites-count"></div>
+                <div class="products-grid" id="products-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <Footer />
+</Layout>
+
+<script>
+    import { getWishlist, removeFromWishlist } from "../scripts/wishlist";
+
+    import { products as allProducts } from "../data/products";
+
+    function renderFavorites() {
+        const wishlist = getWishlist();
+        const loadingState = document.getElementById("loading-state");
+        const emptyState = document.getElementById("empty-state");
+        const productsSection = document.getElementById("products-section");
+        const productsGrid = document.getElementById("products-grid");
+        const favoritesCount = document.getElementById("favorites-count");
+
+        // Ocultar loading
+        if (loadingState) loadingState.style.display = "none";
+
+        if (wishlist.length === 0) {
+            // Mostrar empty state
+            if (emptyState) emptyState.style.display = "block";
+            if (productsSection) productsSection.style.display = "none";
+        } else {
+            // Mostrar productos
+            if (emptyState) emptyState.style.display = "none";
+            if (productsSection) productsSection.style.display = "block";
+
+            // Actualizar contador
+            if (favoritesCount) {
+                favoritesCount.textContent = `${wishlist.length} ${wishlist.length === 1 ? "producto" : "productos"}`;
+            }
+
+            // Renderizar productos
+            if (productsGrid) {
+                productsGrid.innerHTML = wishlist
+                    .map((favItem) => {
+                        const product = allProducts.find(
+                            (p) => p.id === favItem.id,
+                        );
+                        if (!product) return "";
+
+                        const hasDiscount =
+                            product.discount && product.discount > 0;
+                        const priceDisplay = hasDiscount
+                            ? `<div class="flex flex-col items-end">
+                                 <span class="text-xs text-gray-500 line-through">$${(product.originalPrice || 0).toLocaleString()}</span>
+                                 <span class="text-2xl font-bold text-red-600">$${product.price.toLocaleString()}</span>
+                               </div>`
+                            : `<p class="text-2xl font-bold text-gray-900">$${product.price.toLocaleString()}</p>`;
+
+                        const discountBadge = hasDiscount
+                            ? `<div class="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-md text-xs font-bold shadow-sm z-10">-${product.discount}%</div>`
+                            : "";
+
+                        return `
+                        <div class="product-card-wrapper">
+                            <!-- Wishlist Button (Heart) -->
+                            <button 
+                                class="wishlist-btn-favoritos active" 
+                                data-product-id="${product.id}"
+                                title="Quitar de favoritos"
+                                onclick="event.preventDefault(); event.stopPropagation();"
+                            >
+                                <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
+                            </button>
+
+                            <a href="/producto/${product.id}" class="product-link">
+                                <div class="product-card bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-shadow duration-300 relative">
+                                    
+                                    ${discountBadge}
+
+                                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
+                                    </div>
+                                    <div class="p-6">
+                                        <span class="text-xs font-semibold text-blue-600 uppercase tracking-wide">${product.category}</span>
+                                        <h3 class="text-lg font-semibold mt-2 mb-1">${product.name}</h3>
+                                        
+                                        <div class="flex items-center justify-between mb-4">
+                                            <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden" onclick="event.preventDefault(); event.stopPropagation();">
+                                                <button class="decrease-qty px-3 py-1 hover:bg-gray-100 transition-colors text-gray-600">-</button>
+                                                <input type="number" value="1" min="1" max="99" class="qty-input w-12 text-center border-x border-gray-300 py-1 text-sm focus:outline-none" readonly />
+                                                <button class="increase-qty px-3 py-1 hover:bg-gray-100 transition-colors text-gray-600">+</button>
+                                            </div>
+                                            ${priceDisplay}
+                                        </div>
+
+                                        <button
+                                            class="add-to-cart w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                                            data-product-id="${product.id}"
+                                            data-product-name="${product.name}"
+                                            data-product-price="${product.price}"
+                                            data-product-image="${product.image}"
+                                            onclick="event.preventDefault(); event.stopPropagation();"
+                                        >
+                                            Agregar al Carrito
+                                        </button>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    `;
+                    })
+                    .join("");
+
+                // Agregar event listeners
+                attachEventListeners();
+            }
+        }
+    }
+
+    function attachEventListeners() {
+        // Botones de eliminar de favoritos
+        document.querySelectorAll(".wishlist-btn-favoritos").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const productId = parseInt(
+                    (btn as HTMLElement).dataset.productId!,
+                );
+                removeFromWishlist(productId);
+                renderFavorites();
+            });
+        });
+
+        // Manejo de cantidad y agregar al carrito
+        document.querySelectorAll(".product-card").forEach((card) => {
+            const input = card.querySelector(".qty-input") as HTMLInputElement;
+            const decreaseBtn = card.querySelector(".decrease-qty");
+            const increaseBtn = card.querySelector(".increase-qty");
+            const addToCartBtn = card.querySelector(
+                ".add-to-cart",
+            ) as HTMLElement;
+
+            if (input && decreaseBtn && increaseBtn) {
+                decreaseBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const currentValue = parseInt(input.value);
+                    if (currentValue > 1) {
+                        input.value = (currentValue - 1).toString();
+                    }
+                });
+
+                increaseBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const currentValue = parseInt(input.value);
+                    if (currentValue < 99) {
+                        input.value = (currentValue + 1).toString();
+                    }
+                });
+            }
+
+            if (addToCartBtn) {
+                addToCartBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const btn = e.target as HTMLElement;
+                    const quantity = input ? parseInt(input.value) : 1;
+
+                    const product = {
+                        id: parseInt(btn.dataset.productId!),
+                        name: btn.dataset.productName!,
+                        price: parseFloat(btn.dataset.productPrice!),
+                        image: btn.dataset.productImage!,
+                        quantity: quantity,
+                    };
+
+                    import("../scripts/cart.js").then(({ addToCart }) => {
+                        addToCart(product);
+
+                        // Visual feedback
+                        btn.textContent = "✓ Agregado";
+                        btn.classList.add("bg-green-600", "hover:bg-green-700");
+                        btn.classList.remove(
+                            "bg-blue-600",
+                            "hover:bg-blue-700",
+                        );
+
+                        setTimeout(() => {
+                            btn.textContent = "Agregar al Carrito";
+                            btn.classList.remove(
+                                "bg-green-600",
+                                "hover:bg-green-700",
+                            );
+                            btn.classList.add(
+                                "bg-blue-600",
+                                "hover:bg-blue-700",
+                            );
+                        }, 1500);
+                    });
+                });
+            }
+        });
+    }
+
+    // Renderizar al cargar
+    renderFavorites();
+
+    // Actualizar cuando cambie la wishlist
+    window.addEventListener("wishlistUpdated", renderFavorites);
+</script>
+
+<style>
+    .favorites-page {
+        min-height: 100vh;
+        background: #fafafa;
+        padding-top: 56px;
+    }
+
+    .container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 3rem 1rem;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #111827;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+        font-size: 1.125rem;
+        color: #6b7280;
+    }
+
+    .loading {
+        text-align: center;
+        padding: 4rem 1rem;
+    }
+
+    .spinner {
+        width: 48px;
+        height: 48px;
+        border: 4px solid #e5e7eb;
+        border-top-color: #2563eb;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 1rem;
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .empty-icon {
+        width: 96px;
+        height: 96px;
+        color: #d1d5db;
+        margin: 0 auto 1.5rem;
+    }
+
+    .empty-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-text {
+        color: #6b7280;
+        margin-bottom: 2rem;
+    }
+
+    .browse-btn {
+        display: inline-block;
+        background: #2563eb;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .browse-btn:hover {
+        background: #1d4ed8;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .favorites-count {
+        margin-bottom: 1.5rem;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .product-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .product-card-wrapper {
+        position: relative;
+    }
+
+    .wishlist-btn-favoritos {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        background: white;
+        border: none;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 20;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        transition: all 0.2s;
+    }
+
+    .wishlist-btn-favoritos:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .wishlist-btn-favoritos .heart-icon {
+        width: 20px;
+        height: 20px;
+        color: #ef4444;
+        transition: all 0.2s;
+    }
+
+    .wishlist-btn-favoritos.active .heart-icon {
+        fill: currentColor;
+    }
+
+    @media (max-width: 640px) {
+        .products-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

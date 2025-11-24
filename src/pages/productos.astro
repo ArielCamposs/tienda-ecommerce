@@ -1,0 +1,675 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import StarRating from "../components/StarRating.astro";
+import { getAverageRating, getReviewCount } from "../data/reviews";
+
+import { products as allProducts, categories } from "../data/products";
+
+
+---
+
+<Layout title="Productos - PlastiClean">
+    <Header />
+
+    <div class="products-page">
+        <!-- Sidebar de Filtros -->
+        <aside class="filter-sidebar">
+            <div class="filter-header">
+                <h3>Filtros</h3>
+                <button id="clear-filters" class="clear-filters-btn">Limpiar</button>
+            </div>
+
+            <div class="filter-group">
+                <h4>Categorías</h4>
+                <ul class="category-list">
+                    {categories.map(cat => (
+                        <li>
+                            <button class="category-btn" data-category={cat.id}>
+                                {cat.name}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            <div class="filter-group">
+                <h4>Precio</h4>
+                <div class="price-range">
+                    <input type="range" id="price-slider" min="0" max="50000" step="1000" value="50000">
+                    <div class="price-labels">
+                        <span>$0</span>
+                        <span id="price-value">$50.000</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h4>Calificación</h4>
+                <div class="rating-filter">
+                    <label class="rating-option">
+                        <input type="radio" name="rating-filter" value="4" />
+                        <span class="flex items-center gap-1">
+                            <span class="text-yellow-400">★★★★</span>☆ & más
+                        </span>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="rating-filter" value="3" />
+                        <span class="flex items-center gap-1">
+                            <span class="text-yellow-400">★★★</span>☆☆ & más
+                        </span>
+                    </label>
+                    <label class="rating-option">
+                        <input type="radio" name="rating-filter" value="0" checked />
+                        <span>Todas</span>
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="products-content">
+            <div class="results-header">
+                <div class="results-info">
+                    <span id="results-count">{allProducts.length} productos</span>
+                </div>
+                <div class="sort-options">
+                    <select id="sort-select">
+                        <option value="featured">Destacados</option>
+                        <option value="price-asc">Precio: Menor a Mayor</option>
+                        <option value="price-desc">Precio: Mayor a Menor</option>
+                        <option value="rating-desc">Mejor Valorados</option>
+                        <option value="name-asc">Nombre: A-Z</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="products-grid" class="products-grid">
+                {allProducts.map(product => (
+                    <article class="product-card" 
+                        data-product-id={product.id} 
+                        data-category={product.category} 
+                        data-price={product.price} 
+                        data-name={product.name.toLowerCase()} 
+                        data-rating={product.rating}
+                        style="position: relative;"
+                    >
+                        <!-- Wishlist Button -->
+                        <button 
+                            class="wishlist-btn-productos" 
+                            data-product-id={product.id}
+                            data-product-name={product.name}
+                            data-product-price={product.price}
+                            data-product-image={product.image}
+                            title="Agregar a favoritos"
+                        >
+                            <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                        </button>
+
+                        {product.discount && product.discount > 0 && (
+                            <div class="discount-badge">-{product.discount}%</div>
+                        )}
+
+                        <a href={`/producto/${product.id}`} class="product-link">
+                            <div class="product-image">
+                                <img src={product.image} alt={product.name} />
+                            </div>
+                            <div class="product-info">
+                                <span class="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-1 block">{product.category}</span>
+                                <h3 class="product-name">{product.name}</h3>
+                                
+                                <div class="mb-2">
+                                    <StarRating rating={product.rating || 0} size="sm" showCount={true} count={product.reviewCount || 0} />
+                                </div>
+
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden" onclick="event.preventDefault(); event.stopPropagation();">
+                                        <button class="decrease-qty px-2 py-1 hover:bg-gray-100 transition-colors text-gray-600">-</button>
+                                        <input type="number" value="1" min="1" max="99" class="qty-input w-10 text-center border-x border-gray-300 py-1 text-sm focus:outline-none" readonly />
+                                        <button class="increase-qty px-2 py-1 hover:bg-gray-100 transition-colors text-gray-600">+</button>
+                                    </div>
+                                    <div class="text-right">
+                                        {product.originalPrice && product.originalPrice > product.price ? (
+                                            <>
+                                                <p class="text-xs text-gray-500 line-through">${product.originalPrice.toLocaleString('es-CL')}</p>
+                                                <p class="product-price text-red-600">${product.price.toLocaleString('es-CL')}</p>
+                                            </>
+                                        ) : (
+                                            <p class="product-price">${product.price.toLocaleString('es-CL')}</p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <div class="product-actions">
+                            <button 
+                                class="add-to-cart-btn"
+                                data-product-id={product.id}
+                                data-product-name={product.name}
+                                data-product-price={product.price}
+                                data-product-image={product.image}
+                            >
+                                Agregar al Carrito
+                            </button>
+                        </div>
+                    </article>
+                ))}
+            </div>
+        </main>
+    </div>
+
+    <Footer />
+</Layout>
+
+<script>
+    import { addToCart } from "../scripts/cart";
+    import { toggleWishlist, isInWishlist } from "../scripts/wishlist";
+
+    // Variables globales
+    let currentCategory = 'todos';
+    let maxPrice = 50000;
+    let minRating = 0;
+    let sortOrder = 'featured';
+
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', () => {
+        initFilters();
+        initCartButtons();
+        initWishlistButtons();
+    });
+
+    function initFilters() {
+        // Categorías
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Remover clase activa de todos
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                // Agregar a clickeado
+                (e.target as HTMLElement).classList.add('active');
+                
+                currentCategory = (e.target as HTMLElement).dataset.category || 'todos';
+                filterProducts();
+            });
+        });
+
+        // Precio
+        const priceSlider = document.getElementById('price-slider') as HTMLInputElement;
+        const priceValue = document.getElementById('price-value');
+        
+        if (priceSlider && priceValue) {
+            priceSlider.addEventListener('input', (e) => {
+                maxPrice = parseInt((e.target as HTMLInputElement).value);
+                priceValue.textContent = `$${maxPrice.toLocaleString('es-CL')}`;
+                filterProducts();
+            });
+        }
+
+        // Calificación
+        const ratingInputs = document.querySelectorAll('input[name="rating-filter"]');
+        ratingInputs.forEach(input => {
+            input.addEventListener('change', (e) => {
+                minRating = parseInt((e.target as HTMLInputElement).value);
+                filterProducts();
+            });
+        });
+
+        // Ordenamiento
+        const sortSelect = document.getElementById('sort-select') as HTMLSelectElement;
+        if (sortSelect) {
+            sortSelect.addEventListener('change', (e) => {
+                sortOrder = (e.target as HTMLSelectElement).value;
+                filterProducts();
+            });
+        }
+
+        // Limpiar filtros
+        const clearBtn = document.getElementById('clear-filters');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                currentCategory = 'todos';
+                maxPrice = 50000;
+                minRating = 0;
+                sortOrder = 'featured';
+                
+                // Reset UI
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                if (priceSlider) priceSlider.value = "50000";
+                if (priceValue) priceValue.textContent = "$50.000";
+                if (sortSelect) sortSelect.value = "featured";
+                
+                // Reset radio buttons
+                const allRatingRadio = document.querySelector('input[name="rating-filter"][value="0"]') as HTMLInputElement;
+                if (allRatingRadio) allRatingRadio.checked = true;
+                
+                filterProducts();
+            });
+        }
+    }
+
+    function filterProducts() {
+        const products = document.querySelectorAll('.product-card');
+        let visibleCount = 0;
+
+        // Convertir NodeList a Array para ordenar
+        const productsArray = Array.from(products) as HTMLElement[];
+
+        // Filtrar
+        productsArray.forEach(product => {
+            const category = product.dataset.category;
+            const price = parseInt(product.dataset.price || '0');
+            const rating = parseFloat(product.dataset.rating || '0');
+            
+            const categoryMatch = currentCategory === 'todos' || category === currentCategory;
+            const priceMatch = price <= maxPrice;
+            const ratingMatch = rating >= minRating;
+
+            if (categoryMatch && priceMatch && ratingMatch) {
+                product.style.display = 'flex';
+                visibleCount++;
+            } else {
+                product.style.display = 'none';
+            }
+        });
+
+        // Ordenar visibles
+        const grid = document.getElementById('products-grid');
+        if (grid) {
+            const visibleProducts = productsArray.filter(p => p.style.display !== 'none');
+            
+            visibleProducts.sort((a, b) => {
+                const priceA = parseInt(a.dataset.price || '0');
+                const priceB = parseInt(b.dataset.price || '0');
+                const ratingA = parseFloat(a.dataset.rating || '0');
+                const ratingB = parseFloat(b.dataset.rating || '0');
+                const nameA = a.dataset.name || '';
+                const nameB = b.dataset.name || '';
+
+                switch(sortOrder) {
+                    case 'price-asc': return priceA - priceB;
+                    case 'price-desc': return priceB - priceA;
+                    case 'rating-desc': return ratingB - ratingA;
+                    case 'name-asc': return nameA.localeCompare(nameB);
+                    default: return 0; // featured (orden original)
+                }
+            });
+
+            // Reordenar en el DOM
+            visibleProducts.forEach(p => grid.appendChild(p));
+        }
+
+        // Actualizar contador
+        const countEl = document.getElementById('results-count');
+        if (countEl) {
+            countEl.textContent = `${visibleCount} productos`;
+        }
+    }
+
+    function initCartButtons() {
+        document.querySelectorAll('.product-card').forEach(card => {
+            const input = card.querySelector('.qty-input') as HTMLInputElement;
+            const decreaseBtn = card.querySelector('.decrease-qty');
+            const increaseBtn = card.querySelector('.increase-qty');
+            const addToCartBtn = card.querySelector('.add-to-cart-btn') as HTMLElement;
+
+            if (input && decreaseBtn && increaseBtn) {
+                decreaseBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const currentValue = parseInt(input.value);
+                    if (currentValue > 1) {
+                        input.value = (currentValue - 1).toString();
+                    }
+                });
+
+                increaseBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const currentValue = parseInt(input.value);
+                    if (currentValue < 99) {
+                        input.value = (currentValue + 1).toString();
+                    }
+                });
+            }
+
+            if (addToCartBtn) {
+                addToCartBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const button = e.currentTarget as HTMLElement;
+                    const quantity = input ? parseInt(input.value) : 1;
+                    
+                    const product = {
+                        id: parseInt(button.dataset.productId!),
+                        name: button.dataset.productName!,
+                        price: parseFloat(button.dataset.productPrice!),
+                        image: button.dataset.productImage!,
+                        quantity: quantity
+                    };
+
+                    addToCart(product);
+
+                    // Feedback visual
+                    const originalText = button.textContent;
+                    button.textContent = '¡Agregado!';
+                    button.classList.add('added');
+                    
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.classList.remove('added');
+                    }, 1500);
+                });
+            }
+        });
+    }
+
+    function initWishlistButtons() {
+        document.querySelectorAll('.wishlist-btn-productos').forEach(btn => {
+            const button = btn as HTMLElement;
+            const productId = parseInt(button.dataset.productId!);
+            
+            // Estado inicial
+            if (isInWishlist(productId)) {
+                button.classList.add('active');
+            }
+            
+            // Click handler
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const product = {
+                    id: productId,
+                    name: button.dataset.productName!,
+                    price: parseFloat(button.dataset.productPrice!),
+                    image: button.dataset.productImage!
+                };
+                
+                toggleWishlist(product);
+                button.classList.toggle('active');
+            });
+        });
+    }
+</script>
+
+<style>
+    .products-page {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 2rem;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+        min-height: 80vh;
+    }
+
+    /* Sidebar */
+    .filter-sidebar {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        height: fit-content;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .filter-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .filter-header h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .clear-filters-btn {
+        background: none;
+        border: none;
+        color: #2563eb;
+        font-size: 0.875rem;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    .filter-group {
+        margin-bottom: 2rem;
+    }
+
+    .filter-group h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #374151;
+    }
+
+    .category-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .category-btn {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 0.5rem;
+        background: none;
+        border: none;
+        color: #6b7280;
+        cursor: pointer;
+        border-radius: 0.375rem;
+        transition: all 0.2s;
+    }
+
+    .category-btn:hover, .category-btn.active {
+        background: #eff6ff;
+        color: #2563eb;
+        font-weight: 500;
+    }
+
+    /* Price Range */
+    .price-range input {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .price-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.875rem;
+        color: #6b7280;
+    }
+
+    /* Rating Filter */
+    .rating-filter {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .rating-option {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        font-size: 0.9375rem;
+        color: #4b5563;
+    }
+
+    .rating-option input {
+        cursor: pointer;
+    }
+
+    /* Content */
+    .results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .sort-options select {
+        padding: 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        color: #374151;
+    }
+
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 1.5rem;
+    }
+
+    /* Product Card */
+    .product-card {
+        background: white;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        transition: all 0.2s;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    }
+
+    .product-link {
+        text-decoration: none;
+        color: inherit;
+        flex: 1;
+    }
+
+    .product-image {
+        aspect-ratio: 1;
+        overflow: hidden;
+        background: #f3f4f6;
+    }
+
+    .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+
+    .product-card:hover .product-image img {
+        transform: scale(1.05);
+    }
+
+    .product-info {
+        padding: 1rem;
+    }
+
+    .product-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+    }
+
+    .product-price {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #2563eb;
+    }
+
+    .product-actions {
+        padding: 0 1rem 1rem;
+    }
+
+    .add-to-cart-btn {
+        width: 100%;
+        padding: 0.75rem;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .add-to-cart-btn:hover {
+        background: #1d4ed8;
+    }
+
+    .add-to-cart-btn.added {
+        background: #10b981;
+    }
+
+    .discount-badge {
+        position: absolute;
+        top: 0.75rem;
+        left: 0.75rem;
+        background: #ef4444;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.375rem;
+        font-weight: 700;
+        font-size: 0.75rem;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+    }
+
+    /* Wishlist Button */
+    .wishlist-btn-productos {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        background: white;
+        border: none;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        transition: all 0.2s;
+    }
+
+    .wishlist-btn-productos:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .wishlist-btn-productos .heart-icon {
+        width: 20px;
+        height: 20px;
+        color: #ef4444;
+        transition: all 0.2s;
+    }
+
+    .wishlist-btn-productos.active .heart-icon {
+        fill: currentColor;
+        animation: heartbeat 0.3s ease-in-out;
+    }
+
+    @keyframes heartbeat {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .products-page {
+            grid-template-columns: 1fr;
+        }
+
+        .filter-sidebar {
+            margin-bottom: 2rem;
+        }
+    }
+</style>

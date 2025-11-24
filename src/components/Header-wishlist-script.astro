@@ -1,0 +1,21 @@
+<script>
+    import { getWishlistCount } from "../scripts/wishlist";
+
+    // Actualizar contador de favoritos
+    function updateWishlistCount() {
+        const count = getWishlistCount();
+        const countEl = document.getElementById("wishlist-count");
+        if (countEl) {
+            countEl.textContent = count > 0 ? count.toString() : "";
+        }
+    }
+
+    // Actualizar al cargar
+    updateWishlistCount();
+
+    // Actualizar cuando cambie la wishlist
+    window.addEventListener("wishlistUpdated", updateWishlistCount);
+
+    // Actualizar en navegación de Astro
+    document.addEventListener("astro:page-load", updateWishlistCount);
+</script>

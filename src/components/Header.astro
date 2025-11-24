@@ -1,0 +1,950 @@
+---
+import CartButton from "./CartButton.astro";
+---
+
+<header class="header-main">
+    <nav class="nav-container">
+        <!-- Logo -->
+        <a href="/" class="logo-link"> PlastiClean </a>
+
+        <!-- Desktop Menu -->
+        <ul class="desktop-menu">
+            <li>
+                <a href="/productos" class="menu-link">Productos</a>
+            </li>
+            <li class="dropdown-container">
+                <button class="dropdown-trigger">
+                    Categorías
+                    <svg
+                        class="dropdown-arrow"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div class="dropdown-menu">
+                    <a
+                        href="/productos?categoria=industrial"
+                        class="dropdown-item"
+                    >
+                        <svg
+                            class="dropdown-icon"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                            ></path>
+                        </svg>
+                        <div>
+                            <div class="dropdown-item-title">Industrial</div>
+                            <div class="dropdown-item-desc">
+                                Contenedores, bidones y más
+                            </div>
+                        </div>
+                    </a>
+                    <a
+                        href="/productos?categoria=limpieza"
+                        class="dropdown-item"
+                    >
+                        <svg
+                            class="dropdown-icon"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            ></path>
+                        </svg>
+                        <div>
+                            <div class="dropdown-item-title">Limpieza</div>
+                            <div class="dropdown-item-desc">
+                                Escobas, trapeadores, sets
+                            </div>
+                        </div>
+                    </a>
+                    <a
+                        href="/productos?categoria=organizacion"
+                        class="dropdown-item"
+                    >
+                        <svg
+                            class="dropdown-icon"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                            ></path>
+                        </svg>
+                        <div>
+                            <div class="dropdown-item-title">Organización</div>
+                            <div class="dropdown-item-desc">
+                                Cajas, cestas organizadoras
+                            </div>
+                        </div>
+                    </a>
+                    <a
+                        href="/productos?categoria=higiene"
+                        class="dropdown-item"
+                    >
+                        <svg
+                            class="dropdown-icon"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                            ></path>
+                        </svg>
+                        <div>
+                            <div class="dropdown-item-title">Higiene</div>
+                            <div class="dropdown-item-desc">
+                                Kits de desinfección
+                            </div>
+                        </div>
+                    </a>
+                    <a href="/productos?categoria=bano" class="dropdown-item">
+                        <svg
+                            class="dropdown-icon"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                            ></path>
+                        </svg>
+                        <div>
+                            <div class="dropdown-item-title">Baño</div>
+                            <div class="dropdown-item-desc">
+                                Dispensadores, accesorios
+                            </div>
+                        </div>
+                    </a>
+                    <a
+                        href="/productos?categoria=almacenamiento"
+                        class="dropdown-item"
+                    >
+                        <svg
+                            class="dropdown-icon"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                            ></path>
+                        </svg>
+                        <div>
+                            <div class="dropdown-item-title">
+                                Almacenamiento
+                            </div>
+                            <div class="dropdown-item-desc">
+                                Contenedores herméticos
+                            </div>
+                        </div>
+                    </a>
+                    <div class="dropdown-footer">
+                        <a href="/productos" class="dropdown-view-all">
+                            Ver todos los productos →
+                        </a>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <a href="/ofertas" class="menu-link">Ofertas</a>
+            </li>
+            <li>
+                <a href="/contacto" class="menu-link">Contacto</a>
+            </li>
+        </ul>
+
+        <!-- Desktop Search -->
+        <div class="desktop-search">
+            <div class="search-box">
+                <svg
+                    class="search-icon"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <input
+                    type="text"
+                    id="search-desktop"
+                    class="search-input"
+                    placeholder="Buscar..."
+                    autocomplete="off"
+                />
+                <button class="clear-btn hidden" data-search="desktop">×</button
+                >
+            </div>
+            <div id="dropdown-desktop" class="search-dropdown hidden"></div>
+        </div>
+
+        <!-- Right Actions -->
+        <div class="actions-container">
+            <button class="mobile-search-btn" id="toggle-search">
+                <svg
+                    class="icon"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </button>
+
+            <!-- Wishlist Link -->
+            <a href="/favoritos" class="wishlist-link" id="wishlist-link">
+                <svg
+                    class="icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    ></path>
+                </svg>
+                <span class="wishlist-count" id="wishlist-count">0</span>
+            </a>
+
+            <CartButton />
+
+            <button class="mobile-menu-btn" id="toggle-menu">
+                <svg
+                    class="icon"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Search -->
+    <div id="mobile-search-bar" class="mobile-search-bar hidden">
+        <div class="search-box">
+            <svg
+                class="search-icon"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <input
+                type="text"
+                id="search-mobile"
+                class="search-input"
+                placeholder="Buscar productos..."
+                autocomplete="off"
+            />
+            <button class="clear-btn hidden" data-search="mobile">×</button>
+        </div>
+        <div id="dropdown-mobile" class="search-dropdown hidden"></div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu-bar" class="mobile-menu-bar hidden">
+        <a href="/productos" class="mobile-menu-link">Productos</a>
+
+        <div class="mobile-category-section">
+            <div class="mobile-category-title">Categorías</div>
+            <a
+                href="/productos?categoria=industrial"
+                class="mobile-menu-sublink">Industrial</a
+            >
+            <a href="/productos?categoria=limpieza" class="mobile-menu-sublink"
+                >Limpieza</a
+            >
+            <a
+                href="/productos?categoria=organizacion"
+                class="mobile-menu-sublink">Organización</a
+            >
+            <a href="/productos?categoria=higiene" class="mobile-menu-sublink"
+                >Higiene</a
+            >
+            <a href="/productos?categoria=bano" class="mobile-menu-sublink"
+                >Baño</a
+            >
+            <a
+                href="/productos?categoria=almacenamiento"
+                class="mobile-menu-sublink">Almacenamiento</a
+            >
+        </div>
+
+        <a href="/ofertas" class="mobile-menu-link">Ofertas</a>
+        <a href="/contacto" class="mobile-menu-link">Contacto</a>
+    </div>
+</header>
+
+<script>
+    const products = [
+        { id: 1, name: "Contenedor Industrial 50L" },
+        { id: 2, name: "Set Limpieza Profesional" },
+        { id: 3, name: "Caja Organizadora 30L" },
+        { id: 4, name: "Kit Desinfección Completo" },
+        { id: 5, name: "Balde Industrial 20L" },
+        { id: 6, name: "Escobillón Profesional" },
+        { id: 7, name: "Dispensador Jabón Automático" },
+        { id: 8, name: "Contenedor Hermético 100L" },
+        { id: 9, name: "Trapeador Industrial" },
+        { id: 10, name: "Cesta Plástica Grande" },
+    ];
+
+    function initSearch(
+        inputId: string,
+        dropdownId: string,
+        searchType: string,
+    ) {
+        const input = document.getElementById(inputId) as HTMLInputElement;
+        const dropdown = document.getElementById(dropdownId);
+        const clearBtn = document.querySelector(
+            `[data-search="${searchType}"]`,
+        ) as HTMLButtonElement;
+
+        if (!input || !dropdown) return;
+
+        input.addEventListener("input", () => {
+            const query = input.value.trim().toLowerCase();
+
+            if (query.length === 0) {
+                dropdown.classList.add("hidden");
+                clearBtn?.classList.add("hidden");
+                return;
+            }
+
+            clearBtn?.classList.remove("hidden");
+            const results = products.filter((p) =>
+                p.name.toLowerCase().includes(query),
+            );
+
+            if (results.length === 0) {
+                dropdown.innerHTML =
+                    '<div class="no-results">Sin resultados</div>';
+                dropdown.classList.remove("hidden");
+                return;
+            }
+
+            dropdown.innerHTML = results
+                .slice(0, 6)
+                .map(
+                    (p) => `
+        <a href="/producto/${p.id}" class="result-item">
+          ${p.name.replace(new RegExp(`(${query})`, "gi"), "<strong>$1</strong>")}
+        </a>
+      `,
+                )
+                .join("");
+            dropdown.classList.remove("hidden");
+        });
+
+        clearBtn?.addEventListener("click", () => {
+            input.value = "";
+            dropdown.classList.add("hidden");
+            clearBtn.classList.add("hidden");
+            input.focus();
+        });
+
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && input.value.trim()) {
+                window.location.href = `/productos?buscar=${encodeURIComponent(input.value.trim())}`;
+            }
+        });
+    }
+
+    initSearch("search-desktop", "dropdown-desktop", "desktop");
+    initSearch("search-mobile", "dropdown-mobile", "mobile");
+
+    // Mobile toggles
+    document.getElementById("toggle-search")?.addEventListener("click", () => {
+        document
+            .getElementById("mobile-search-bar")
+            ?.classList.toggle("hidden");
+        document.getElementById("mobile-menu-bar")?.classList.add("hidden");
+    });
+
+    document.getElementById("toggle-menu")?.addEventListener("click", () => {
+        document.getElementById("mobile-menu-bar")?.classList.toggle("hidden");
+        document.getElementById("mobile-search-bar")?.classList.add("hidden");
+    });
+
+    // Close on outside click
+    document.addEventListener("click", (e) => {
+        const target = e.target as Element;
+        if (
+            !target.closest(".search-box") &&
+            !target.closest(".search-dropdown")
+        ) {
+            document
+                .querySelectorAll(".search-dropdown")
+                .forEach((d) => d.classList.add("hidden"));
+        }
+    });
+</script>
+
+<style>
+    .header-main {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid #e5e7eb;
+        z-index: 50;
+    }
+
+    .nav-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        height: 56px;
+        padding: 0 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .logo-link {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #111827;
+        text-decoration: none;
+        transition: opacity 0.2s;
+        flex-shrink: 0;
+    }
+
+    .logo-link:hover {
+        opacity: 0.7;
+    }
+
+    .desktop-menu {
+        display: none;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        align-items: center;
+        gap: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    @media (min-width: 1024px) {
+        .desktop-menu {
+            display: flex;
+        }
+    }
+
+    .desktop-menu > li {
+        display: flex;
+        align-items: center;
+    }
+
+    .menu-link {
+        font-size: 0.875rem;
+        color: #374151;
+        text-decoration: none;
+        transition: opacity 0.2s;
+        white-space: nowrap;
+    }
+
+    .menu-link:hover {
+        opacity: 0.7;
+    }
+
+    /* Dropdown Styles */
+    .dropdown-container {
+        position: relative;
+    }
+
+    .dropdown-trigger {
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        background: none;
+        border: none;
+        color: #374151;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: opacity 0.2s;
+        padding: 0;
+        white-space: nowrap;
+    }
+
+    .dropdown-trigger:hover {
+        opacity: 0.7;
+    }
+
+    .dropdown-arrow {
+        width: 14px;
+        height: 14px;
+        transition: transform 0.2s;
+    }
+
+    .dropdown-container:hover .dropdown-arrow {
+        transform: rotate(180deg);
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        border-radius: 0.75rem;
+        box-shadow:
+            0 20px 25px -5px rgba(0, 0, 0, 0.1),
+            0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border: 1px solid #e5e7eb;
+        min-width: 320px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+        z-index: 100;
+        margin-top: 0.75rem;
+    }
+
+    .dropdown-container:hover .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .dropdown-container::before {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        height: 0.75rem;
+        background: transparent;
+    }
+
+    .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 1.25rem;
+        text-decoration: none;
+        color: #111827;
+        transition: background 0.15s;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .dropdown-item:first-child {
+        border-radius: 0.75rem 0.75rem 0 0;
+    }
+
+    .dropdown-item:hover {
+        background: #f9fafb;
+    }
+
+    .dropdown-icon {
+        width: 22px;
+        height: 22px;
+        color: #3b82f6;
+        flex-shrink: 0;
+    }
+
+    .dropdown-item-title {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 0.125rem;
+    }
+
+    .dropdown-item-desc {
+        font-size: 0.75rem;
+        color: #6b7280;
+    }
+
+    .dropdown-footer {
+        padding: 0.875rem 1.25rem;
+        border-top: 1px solid #e5e7eb;
+        background: #f9fafb;
+        border-radius: 0 0 0.75rem 0.75rem;
+    }
+
+    .dropdown-view-all {
+        display: block;
+        text-align: center;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #2563eb;
+        text-decoration: none;
+        transition: opacity 0.2s;
+    }
+
+    .dropdown-view-all:hover {
+        opacity: 0.7;
+    }
+
+    /* Search Styles */
+    .desktop-search {
+        display: none;
+        flex: 0 1 280px;
+        position: relative;
+        margin-left: auto;
+    }
+
+    @media (min-width: 768px) {
+        .desktop-search {
+            display: block;
+        }
+    }
+
+    .search-box {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background: #f3f4f6;
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        transition: all 0.2s;
+    }
+
+    .search-box:focus-within {
+        background: white;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .search-icon {
+        width: 16px;
+        height: 16px;
+        color: #6b7280;
+        margin-right: 0.5rem;
+        flex-shrink: 0;
+    }
+
+    .search-input {
+        flex: 1;
+        border: none;
+        background: transparent;
+        outline: none;
+        font-size: 0.875rem;
+        color: #111827;
+    }
+
+    .search-input::placeholder {
+        color: #9ca3af;
+    }
+
+    .clear-btn {
+        background: none;
+        border: none;
+        color: #9ca3af;
+        font-size: 1.5rem;
+        line-height: 1;
+        padding: 0 0.25rem;
+        cursor: pointer;
+    }
+
+    .clear-btn:hover {
+        color: #4b5563;
+    }
+
+    .search-dropdown {
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        left: 0;
+        right: 0;
+        background: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        border: 1px solid #e5e7eb;
+        overflow: hidden;
+        z-index: 100;
+        animation: slideDown 0.2s ease;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .result-item {
+        display: block;
+        padding: 0.875rem 1rem;
+        color: #1f2937;
+        text-decoration: none;
+        font-size: 0.9375rem;
+        border-bottom: 1px solid #f3f4f6;
+        transition: background 0.15s;
+    }
+
+    .result-item:last-child {
+        border-bottom: none;
+    }
+
+    .result-item:hover {
+        background: #f9fafb;
+    }
+
+    .result-item strong {
+        color: #2563eb;
+        font-weight: 600;
+        background: #dbeafe;
+        padding: 2px 4px;
+        border-radius: 3px;
+    }
+
+    .no-results {
+        padding: 2rem;
+        text-align: center;
+        color: #9ca3af;
+        font-size: 0.875rem;
+    }
+
+    .actions-container {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-shrink: 0;
+        margin-left: auto;
+    }
+
+    @media (min-width: 768px) {
+        .actions-container {
+            margin-left: 0;
+        }
+    }
+
+    .mobile-search-btn,
+    .mobile-menu-btn {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        color: #374151;
+    }
+
+    .mobile-search-btn {
+        display: block;
+    }
+
+    @media (min-width: 768px) {
+        .mobile-search-btn {
+            display: none;
+        }
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    @media (min-width: 1024px) {
+        .mobile-menu-btn {
+            display: none;
+        }
+    }
+
+    .icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .mobile-search-bar,
+    .mobile-menu-bar {
+        border-top: 1px solid #e5e7eb;
+        background: white;
+        padding: 1rem;
+    }
+
+    @media (min-width: 768px) {
+        .mobile-search-bar {
+            display: none !important;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .mobile-menu-bar {
+            display: none !important;
+        }
+    }
+
+    .mobile-menu-link {
+        display: block;
+        padding: 0.75rem 0;
+        color: #374151;
+        text-decoration: none;
+        font-size: 0.875rem;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .mobile-menu-link:last-of-type {
+        border-bottom: none;
+    }
+
+    .mobile-category-section {
+        padding: 0.5rem 0;
+        border-top: 1px solid #f3f4f6;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 0.5rem 0;
+    }
+
+    .mobile-category-title {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.5rem 0;
+        margin-bottom: 0.25rem;
+    }
+
+    .mobile-menu-sublink {
+        display: block;
+        padding: 0.625rem 0 0.625rem 1rem;
+        color: #4b5563;
+        text-decoration: none;
+        font-size: 0.875rem;
+        border-left: 2px solid transparent;
+        transition: all 0.2s;
+    }
+
+    .mobile-menu-sublink:hover {
+        border-left-color: #3b82f6;
+        color: #2563eb;
+        padding-left: 1.25rem;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    /* Wishlist Link */
+    .wishlist-link {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        transition: all 0.2s;
+        text-decoration: none;
+        color: #374151;
+    }
+
+    .wishlist-link:hover {
+        background: #f3f4f6;
+        color: #ef4444;
+    }
+
+    .wishlist-link .icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .wishlist-count {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        background: #ef4444;
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 600;
+        min-width: 20px;
+        height: 20px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 6px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .wishlist-count:empty {
+        display: none;
+    }
+</style>
+
+<script>
+    import { getWishlistCount } from "../scripts/wishlist";
+
+    // Actualizar contador de favoritos
+    function updateWishlistCount() {
+        const count = getWishlistCount();
+        const countEl = document.getElementById("wishlist-count");
+        if (countEl) {
+            countEl.textContent = count > 0 ? count.toString() : "";
+        }
+    }
+
+    // Actualizar al cargar
+    updateWishlistCount();
+
+    // Actualizar cuando cambie la wishlist
+    window.addEventListener("wishlistUpdated", updateWishlistCount);
+
+    // Actualizar en navegación de Astro
+    document.addEventListener("astro:page-load", updateWishlistCount);
+</script>

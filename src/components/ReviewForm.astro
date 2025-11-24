@@ -1,0 +1,233 @@
+---
+interface Props {
+    productId: number;
+}
+
+const { productId } = Astro.props;
+---
+
+<form class="review-form" id="review-form" data-product-id={productId}>
+    <h3 class="text-xl font-bold text-gray-900 mb-6">Escribe una Reseña</h3>
+
+    <div class="form-group mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2"
+            >Tu Calificación</label
+        >
+        <div class="rating-input flex gap-1">
+            {
+                [1, 2, 3, 4, 5].map((star) => (
+                    <button type="button" class="star-btn" data-value={star}>
+                        <svg
+                            class="w-8 h-8 text-gray-300 hover:text-yellow-400 transition-colors"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                        >
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                    </button>
+                ))
+            }
+        </div>
+        <input type="hidden" name="rating" id="rating-value" required />
+        <p class="text-red-500 text-sm mt-1 hidden" id="rating-error">
+            Por favor selecciona una calificación
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div class="form-group">
+            <label
+                for="name"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Nombre</label
+            >
+            <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                placeholder="Tu nombre"
+            />
+        </div>
+        <div class="form-group">
+            <label
+                for="email"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Email</label
+            >
+            <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                placeholder="tu@email.com"
+            />
+        </div>
+    </div>
+
+    <div class="form-group mb-4">
+        <label for="title" class="block text-sm font-medium text-gray-700 mb-1"
+            >Título de la reseña</label
+        >
+        <input
+            type="text"
+            id="title"
+            name="title"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+            placeholder="Resumen de tu experiencia"
+        />
+    </div>
+
+    <div class="form-group mb-6">
+        <label
+            for="comment"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Comentario</label
+        >
+        <textarea
+            id="comment"
+            name="comment"
+            rows="4"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none"
+            placeholder="Cuéntanos más sobre el producto..."></textarea>
+    </div>
+
+    <button
+        type="submit"
+        class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors focus:ring-4 focus:ring-blue-200"
+    >
+        Publicar Reseña
+    </button>
+</form>
+
+<div
+    id="success-message"
+    class="hidden bg-green-50 border border-green-200 rounded-lg p-6 text-center"
+>
+    <div class="flex justify-center mb-4">
+        <div class="bg-green-100 p-3 rounded-full">
+            <svg
+                class="w-8 h-8 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+    </div>
+    <h3 class="text-lg font-bold text-green-800 mb-2">
+        ¡Gracias por tu reseña!
+    </h3>
+    <p class="text-green-600">
+        Tu opinión ha sido enviada y será publicada después de ser verificada.
+    </p>
+    <button
+        id="write-another"
+        class="mt-4 text-green-700 font-medium hover:underline"
+        >Escribir otra reseña</button
+    >
+</div>
+
+<style>
+    .star-btn.active svg,
+    .star-btn.hover svg {
+        color: #f59e0b; /* yellow-400 */
+        fill: #f59e0b;
+    }
+</style>
+
+<script>
+    const form = document.getElementById("review-form") as HTMLFormElement;
+    const successMessage = document.getElementById("success-message");
+    const writeAnotherBtn = document.getElementById("write-another");
+    const stars = document.querySelectorAll(".star-btn");
+    const ratingInput = document.getElementById(
+        "rating-value",
+    ) as HTMLInputElement;
+    const ratingError = document.getElementById("rating-error");
+
+    // Star Rating Logic
+    let currentRating = 0;
+
+    stars.forEach((star) => {
+        const btn = star as HTMLElement;
+        const value = parseInt(btn.dataset.value!);
+
+        // Hover effect
+        btn.addEventListener("mouseenter", () => {
+            updateStars(value, "hover");
+        });
+
+        btn.addEventListener("mouseleave", () => {
+            updateStars(currentRating, "active");
+            // Clear hover classes
+            stars.forEach((s) => s.classList.remove("hover"));
+        });
+
+        // Click effect
+        btn.addEventListener("click", () => {
+            currentRating = value;
+            ratingInput.value = value.toString();
+            updateStars(currentRating, "active");
+            ratingError?.classList.add("hidden");
+        });
+    });
+
+    function updateStars(value: number, className: string) {
+        stars.forEach((star) => {
+            const starValue = parseInt((star as HTMLElement).dataset.value!);
+            if (starValue <= value) {
+                star.classList.add(className);
+            } else {
+                star.classList.remove(className);
+            }
+        });
+    }
+
+    // Form Submission
+    if (form) {
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            if (!currentRating) {
+                ratingError?.classList.remove("hidden");
+                return;
+            }
+
+            // Simulate API call
+            const btn = form.querySelector(
+                'button[type="submit"]',
+            ) as HTMLButtonElement;
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = "Enviando...";
+
+            setTimeout(() => {
+                form.classList.add("hidden");
+                successMessage?.classList.remove("hidden");
+                form.reset();
+                currentRating = 0;
+                updateStars(0, "active");
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }, 1500);
+        });
+    }
+
+    if (writeAnotherBtn) {
+        writeAnotherBtn.addEventListener("click", () => {
+            successMessage?.classList.add("hidden");
+            form.classList.remove("hidden");
+        });
+    }
+</script>

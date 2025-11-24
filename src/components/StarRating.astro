@@ -1,0 +1,110 @@
+---
+interface Props {
+    rating: number;
+    maxRating?: number;
+    size?: "sm" | "md" | "lg";
+    showCount?: boolean;
+    count?: number;
+    interactive?: boolean;
+}
+
+const {
+    rating,
+    maxRating = 5,
+    size = "md",
+    showCount = false,
+    count = 0,
+    interactive = false,
+} = Astro.props;
+
+const sizeClasses = {
+    sm: "w-4 h-4",
+    md: "w-5 h-5",
+    lg: "w-6 h-6",
+};
+
+const iconSize = sizeClasses[size];
+
+// Generar array de estrellas
+const stars = Array.from({ length: maxRating }, (_, i) => {
+    const starValue = i + 1;
+    const fillPercentage = Math.max(0, Math.min(100, (rating - i) * 100));
+    return { starValue, fillPercentage };
+});
+---
+
+<div class={`star-rating ${interactive ? "interactive" : ""}`}>
+    <div class="stars-container">
+        {
+            stars.map(({ starValue, fillPercentage }) => (
+                <div class="star-wrapper" data-rating={starValue}>
+                    <svg
+                        class={`star ${iconSize}`}
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <defs>
+                            <linearGradient
+                                id={`star-gradient-${starValue}-${rating}`}
+                            >
+                                <stop
+                                    offset={`${fillPercentage}%`}
+                                    stop-color="#F59E0B"
+                                />
+                                <stop
+                                    offset={`${fillPercentage}%`}
+                                    stop-color="#E5E7EB"
+                                />
+                            </linearGradient>
+                        </defs>
+                        <path
+                            fill={`url(#star-gradient-${starValue}-${rating})`}
+                            stroke="#F59E0B"
+                            stroke-width="1"
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                        />
+                    </svg>
+                </div>
+            ))
+        }
+    </div>
+
+    {showCount && count > 0 && <span class="review-count">({count})</span>}
+</div>
+
+<style>
+    .star-rating {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .stars-container {
+        display: flex;
+        gap: 0.125rem;
+    }
+
+    .star-wrapper {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .star {
+        flex-shrink: 0;
+        transition: transform 0.2s;
+    }
+
+    .interactive .star-wrapper {
+        cursor: pointer;
+    }
+
+    .interactive .star-wrapper:hover .star {
+        transform: scale(1.1);
+    }
+
+    .review-count {
+        font-size: 0.875rem;
+        color: #6b7280;
+        font-weight: 500;
+    }
+</style>

@@ -1,0 +1,227 @@
+---
+const products = [
+    "Contenedor Industrial 50L",
+    "Set Limpieza Profesional",
+    "Caja Organizadora 30L",
+    "Kit Desinfección Completo",
+    "Balde Industrial 20L",
+    "Escobillón Profesional",
+    "Dispensador Jabón Automático",
+    "Contenedor Hermético 100L",
+    "Trapeador Industrial Premium",
+    "Cesta Plástica Grande",
+];
+---
+
+<div class="search-bar-container">
+    <div class="search-box-wrapper">
+        <svg
+            class="search-icon"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        <input
+            type="text"
+            id="search-main"
+            class="search-input"
+            placeholder="Buscar productos..."
+            autocomplete="off"
+        />
+        <button id="clear-search" class="clear-btn">&times;</button>
+    </div>
+    <div id="search-results" class="search-dropdown"></div>
+</div>
+
+<script define:vars={{ products }}>
+    const searchInput = document.getElementById("search-main");
+    const searchResults = document.getElementById("search-results");
+    const clearBtn = document.getElementById("clear-search");
+
+    function renderResults(query) {
+        const q = query.trim().toLowerCase();
+
+        if (!q) {
+            searchResults.style.display = "none";
+            clearBtn.style.display = "none";
+            return;
+        }
+
+        clearBtn.style.display = "block";
+        const matches = products.filter((p) => p.toLowerCase().includes(q));
+
+        if (matches.length === 0) {
+            searchResults.innerHTML =
+                '<div class="no-results">Sin resultados</div>';
+            searchResults.style.display = "block";
+            return;
+        }
+
+        searchResults.innerHTML = matches
+            .slice(0, 6)
+            .map(
+                (prod) => `
+      <a href="/productos?buscar=${encodeURIComponent(prod)}" class="result-item">
+        ${prod.replace(new RegExp(`(${q})`, "gi"), "<strong>$1</strong>")}
+      </a>
+    `,
+            )
+            .join("");
+        searchResults.style.display = "block";
+    }
+
+    searchInput.addEventListener("input", (e) => renderResults(e.target.value));
+    searchInput.addEventListener("focus", (e) => renderResults(e.target.value));
+
+    searchInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && searchInput.value.trim()) {
+            window.location.href = `/productos?buscar=${encodeURIComponent(searchInput.value.trim())}`;
+        }
+    });
+
+    clearBtn.addEventListener("click", () => {
+        searchInput.value = "";
+        renderResults("");
+        searchInput.focus();
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest(".search-bar-container")) {
+            searchResults.style.display = "none";
+        }
+    });
+</script>
+
+<style>
+    .search-bar-container {
+        position: relative;
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+    }
+
+    .search-box-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 1.25rem;
+        width: 20px;
+        height: 20px;
+        color: #9ca3af;
+        pointer-events: none;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 1rem 3rem 1rem 3.5rem;
+        font-size: 1.1rem;
+        border: none;
+        border-radius: 2rem;
+        background: #f6f7f9;
+        box-shadow: 0 4px 20px rgba(37, 99, 235, 0.08);
+        outline: none;
+        color: #1f2937;
+        transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+        background: white;
+        box-shadow:
+            0 8px 30px rgba(37, 99, 235, 0.12),
+            0 2px 15px rgba(220, 38, 38, 0.08);
+    }
+
+    .clear-btn {
+        position: absolute;
+        right: 1.25rem;
+        background: none;
+        border: none;
+        font-size: 1.75rem;
+        color: #9ca3af;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+        display: none;
+        transition: color 0.2s;
+    }
+
+    .clear-btn:hover {
+        color: #6b7280;
+    }
+
+    .search-dropdown {
+        position: absolute;
+        top: calc(100% + 0.75rem);
+        left: 0;
+        right: 0;
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+        border: 1px solid #e5e7eb;
+        overflow: hidden;
+        display: none;
+        z-index: 50;
+        animation: slideDown 0.2s ease;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .result-item {
+        display: block;
+        padding: 1rem 1.25rem;
+        color: #1f2937;
+        text-decoration: none;
+        font-size: 1rem;
+        border-bottom: 1px solid #f3f4f6;
+        transition: background 0.15s;
+    }
+
+    .result-item:last-child {
+        border-bottom: none;
+    }
+
+    .result-item:hover {
+        background: #f9fafb;
+    }
+
+    .result-item strong {
+        color: #2563eb;
+        font-weight: 600;
+        background: #dbeafe;
+        padding: 2px 4px;
+        border-radius: 4px;
+    }
+
+    .no-results {
+        padding: 2rem;
+        text-align: center;
+        color: #9ca3af;
+        font-size: 0.95rem;
+    }
+
+    @media (max-width: 640px) {
+        .search-input {
+            font-size: 1rem;
+            padding: 0.875rem 2.5rem 0.875rem 3rem;
+        }
+    }
+</style>
