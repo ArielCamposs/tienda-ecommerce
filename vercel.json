@@ -1,4 +1,3 @@
-```json
 {
     "buildCommand": "npm install && npx astro build",
     "outputDirectory": "dist",
@@ -6,4 +5,3 @@
     "installCommand": "npm ci --legacy-peer-deps",
     "devCommand": "npm run dev"
 }
-```
